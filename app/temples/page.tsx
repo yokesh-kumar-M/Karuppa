@@ -87,8 +87,8 @@ export default function TemplesPage() {
               guardian, raised in many grounds.
             </p>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-sacred/60">
-              A map-driven explorer will live here in time. For now, an atlas of
-              the principal shrines: the source, and those that took its soil.
+              An editorial atlas of the principal shrines: the remembered
+              source, and the grounds said to have carried its soil onward.
             </p>
           </ScrollReveal>
 
@@ -129,8 +129,8 @@ export default function TemplesPage() {
 
         <ScrollReveal>
           <p className="mt-10 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/40">
-            <BeliefTag kind="belief" /> An indicative atlas — more shrines will be
-            charted as the map is drawn.
+            <BeliefTag kind="belief" /> An indicative devotional atlas — locations
+            and origin claims remain marked for temple-source review.
           </p>
         </ScrollReveal>
       </section>

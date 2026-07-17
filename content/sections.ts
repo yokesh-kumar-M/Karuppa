@@ -97,7 +97,7 @@ export const sections: Record<string, SectionContent> = {
     eyebrow: "Temples",
     tamil: "கோயில்கள்",
     title: "Shrines of the Guardian",
-    lead: "From the hills near Madurai to shrines across the seas. A map-driven explorer will live here in time; for now, the principal shrines.",
+    lead: "From the hills near Madurai to shrines across the seas — an editorial atlas of principal places held in devotional memory.",
     points: [
       { title: "Azhagar Koil, Madurai", body: "Considered the original shrine — other temples are said to take their soil from here.", verify: true },
       { title: "Mettukulam, Coimbatore", body: "A temple dedicated solely to Karuppu." },
@@ -128,7 +128,7 @@ export const sections: Record<string, SectionContent> = {
     eyebrow: "Gallery",
     tamil: "காட்சியகம்",
     title: "The Hall of Motion",
-    lead: "In time this becomes the hall of motion — the gods rendered in fire and movement. For now, the fires themselves wait on the Threshold.",
+    lead: "A veiled hall of six forms, each shadow opening into its own room of identity, place and devotional memory.",
     points: [
       { title: "The Stills", body: "Consecrated portraits of each form, revealed only once you enter his sanctum." },
       { title: "The Motion", body: "Scroll-scrubbed reveals where each guardian performs his divine act — arriving with the motion baseline." },

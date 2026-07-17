@@ -61,7 +61,6 @@ export function SanctumVeil() {
   useEffect(() => {
     if (pathname === lastPath.current) return;
     lastPath.current = pathname;
-    window.scrollTo(0, 0);
     const held = Date.now() - coverAt.current;
     const wait = Math.max(0, 380 - held);
     const t = setTimeout(() => setCovering(false), wait);

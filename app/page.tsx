@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { forms } from "@/content/forms";
+import { forms } from "@/services/karuppu";
 import { LandingExperience } from "@/components/landing/LandingExperience";
 
 export const metadata: Metadata = {

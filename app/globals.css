@@ -1,28 +1,32 @@
 @import "tailwindcss";
 
 /* ===========================================================================
-   Karuppa — the black room (plan.md §2)
-   A near-black monochrome shrine. Only three instruments speak: TEXT,
-   VIDEO MOTION, and PHOTO BLUR. Everything else — accent colour, gold, fire
-   gradients, per-form theming, cursor glow — is removed, not muted.
+   Karuppa — the black room, cut by one blood seam (plan.md §2, §11)
+   A near-black monochrome shrine. Three instruments speak — TEXT, VIDEO
+   MOTION, PHOTO BLUR — and exactly ONE colour may cut the dark: the blood
+   red of the brush wordmark. The seam touches marks and edges only (the
+   wordmark, hairlines, seals, active nav, CTAs, "reveal" markers). It never
+   floods: no red panels, no red body text, and the photographs stay
+   greyscale until the glow pass says otherwise.
 
-   The whole palette is four greyscale tokens. No hue anywhere in the chrome.
+   One quieter exception: temple gold (`ashgold`) may whisper on ritual
+   artefacts only — offering tags, shrine cards, belief markers.
    =========================================================================== */
 
 @theme {
-  /* ---- The four-token greyscale (plan.md §2) ----
-     Legacy colour names survive only so the existing utility classes
-     (text-sacred, bg-fire, text-ashgold, …) resolve to ash/void instead of
-     hue. There is no red, gold, blue, green, or violet left in the system. */
-  --color-void: #050505;        /* near-black, not #000 — no banding on video/photo */
-  --color-stone: #111113;       /* cards / panels — a breath above void */
-  --color-karuppu: #18181a;     /* mass / deep panel */
-  --color-blood: #161616;       /* deep shadow / scrollbar thumb (no red) */
+  /* ---- Ground (greyscale — the room itself) ---- */
+  --color-void: #040404;        /* near-black, not #000 — no banding on video/photo */
+  --color-stone: #11100f;       /* cards / panels — a breath above void */
+  --color-karuppu: #181514;     /* mass / deep panel */
+  --color-sacred: #eee8dd;      /* ash — the "light", carries all text */
 
-  --color-sacred: #e7e3da;      /* ash — the only "light", carries all text */
-  --color-ashgold: #e7e3da;     /* former gold headings → ash */
-  --color-fire: #e7e3da;        /* former accent red → ash (inverted CTAs, markers) */
-  --color-ember: #b8b4ab;       /* former hover glow → dim ash */
+  /* ---- The blood seam (marks and edges only, never floods) ---- */
+  --color-fire: #ff1814;        /* THE seam — the wordmark red */
+  --color-ember: #ff6a2a;       /* hot edge of the seam — sparks, tiny marks */
+  --color-blood: #390606;       /* dried blood — scrollbar thumb, deepest edges */
+
+  /* ---- Temple gold (ritual artefacts only) ---- */
+  --color-ashgold: #d8b56d;     /* offering tags, shrine cards, belief markers */
 
   /* ---- Type (families wired in lib/fonts.ts via next/font) ---- */
   --font-display: var(--font-cinzel), "Times New Roman", serif;
@@ -31,33 +35,27 @@
   --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
-/* `accent` / `glow` linger as utilities only to keep old class names compiling.
-   Both now resolve to ash / a faint ash bloom — never a colour. New code should
-   prefer the named tokens below. */
+/* `accent` / `glow` resolve to the seam so every legacy `text-accent` /
+   `border-accent` callsite lights blood-red from one switch. Repoint the two
+   tokens below and the whole seam moves. */
 @theme inline {
   --color-accent: var(--accent);
   --color-glow: var(--glow);
 }
 
 /* ---------------------------------------------------------------------------
-   Canonical tokens. Gods no longer have colours — they have names and motion,
-   so there are no [data-form] themes. Just ash on void.
+   Canonical tokens. Gods still have no colours of their own — they have
+   names and motion. The seam belongs to the shrine, not to any one form.
 --------------------------------------------------------------------------- */
 :root {
-  --void: #050505;
-  --ash: #e7e3da;
-  --dim: rgba(231, 227, 218, 0.55);   /* secondary text */
-  --faint: rgba(231, 227, 218, 0.14); /* hairlines, borders, 1px progress line */
+  --void: #040404;
+  --ash: #eee8dd;
+  --dim: rgba(238, 232, 221, 0.58);   /* secondary text */
+  --faint: rgba(238, 232, 221, 0.14); /* hairlines, borders, 1px progress line */
 
-  /* Offline-safe font fallbacks. */
-  --font-cinzel: "Times New Roman";
-  --font-cormorant: Georgia;
-  --font-catamaran: "Noto Sans Tamil";
-  --font-inter: system-ui;
-
-  /* Legacy aliases — ash, and a barely-there ash bloom (brightness, not hue). */
-  --accent: #e7e3da;
-  --glow: rgba(231, 227, 218, 0.1);
+  /* The seam, addressable as a pair: the red + its bloom. */
+  --accent: #ff1814;
+  --glow: rgba(255, 24, 20, 0.18);
 
   /* Standardized blur scale — blur itself signals proximity (plan.md §2). */
   --blur-threshold: 48px; /* landing / deep veil — presence, never a portrait */
@@ -71,15 +69,32 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
   }
   body {
     background-color: var(--void);
+    background-image:
+      radial-gradient(circle at 12% 0%, rgba(255, 24, 20, 0.035), transparent 28rem),
+      linear-gradient(to bottom, #060504, var(--void) 30rem);
     color: var(--ash);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
   }
   /* Ash-on-black selection — no fire. */
   ::selection {
@@ -136,6 +151,24 @@
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
+/* A quiet boundary grid — ash lines scored into black granite. */
+.ritual-grid {
+  background-image:
+    linear-gradient(rgba(238, 232, 221, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(238, 232, 221, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 82%, transparent);
+}
+
+.site-header {
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+}
+
+.ambient-sound {
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  left: max(1.25rem, env(safe-area-inset-left));
+}
+
 /* ===========================================================================
    The three instruments — text, motion, blur — and a whisper of grain.
    No colour. Anything that "lights" does so in brightness, never hue.
@@ -149,6 +182,27 @@
 }
 .ignite { animation: ignite 1.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
+@keyframes wordmark-rise {
+  0%   { opacity: 0; filter: blur(14px) brightness(0.25); transform: translateY(18px) scale(0.985); }
+  58%  { opacity: 1; filter: blur(0) brightness(1.18); }
+  100% { opacity: 1; filter: blur(0) brightness(1); transform: translateY(0) scale(1); }
+}
+.wordmark-rise { animation: wordmark-rise 1.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(22px); filter: blur(7px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.hero-rise { animation: hero-rise 1.1s 0.18s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* The bloom follows the seam: var(--glow) is the shrine's blood by default and
+   the god's own light inside his room / behind his door (plan.md §14). */
+.brush-heading {
+  text-shadow:
+    0 0 18px var(--glow),
+    0 2px 18px rgba(0, 0, 0, 0.95);
+}
+
 /* Film grain drift — keeps the black from looking dead. Reads as cinema. */
 @keyframes grain-shift {
   0%   { transform: translate(0, 0); }
@@ -159,6 +213,15 @@
   100% { transform: translate(0, 0); }
 }
 .grain { animation: grain-shift 8s steps(6) infinite; }
+
+/* The room's light breathing (plan.md §14) — the sanctum aura swells and
+   settles like a lamp behind cloth. Colour comes from var(--glow), which the
+   room has already re-pointed to the god's own bloom. */
+@keyframes aura-breathe {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 0.8;  transform: scale(1.05); }
+}
+.aura-breathe { animation: aura-breathe 11s ease-in-out infinite; }
 
 /* Heat shimmer for a lamp / shrine flame — motion only, no colour. */
 @keyframes flame-flicker {
@@ -180,9 +243,16 @@
 .kenburns { transform: scale(1.72); animation: kenburns 26s ease-in-out infinite alternate; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ignite, .grain, .slow-spin, .kenburns, .flame { animation: none !important; }
+  .ignite, .wordmark-rise, .hero-rise, .grain, .slow-spin, .kenburns, .flame { animation: none !important; }
   .ignite { opacity: 1; filter: none; transform: none; letter-spacing: normal; }
+  .wordmark-rise { opacity: 1; filter: none; transform: none; }
+  .hero-rise { opacity: 1; filter: none; transform: none; }
   .kenburns { transform: scale(1.72); }
+}
+
+@media (max-width: 639px) {
+  .ritual-grid { background-size: 48px 48px; }
+  .hero-portrait { object-position: 58% 18%; }
 }
 
 /* ===========================================================================

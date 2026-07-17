@@ -35,15 +35,6 @@ export const Vel: Icon = (props) => (
   </svg>
 );
 
-/** Trishul — the trident. */
-export const Trishul: Icon = (props) => (
-  <svg {...base(props)}>
-    <path d="M12 22V8.5" />
-    <path d="M7 9V5M12 8.5V3M17 9V5" />
-    <path d="M6.8 9c1.2-2 10.2-2 11.4 0" />
-  </svg>
-);
-
 /** Kuthuvilakku — the oil lamp; lights with a flame when `lit`. */
 export const Lamp = ({
   lit = false,

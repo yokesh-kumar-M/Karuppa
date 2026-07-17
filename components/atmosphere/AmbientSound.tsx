@@ -138,12 +138,12 @@ export function AmbientSound() {
       aria-pressed={on}
       aria-label={on ? "Mute ambient sound" : "Play ambient sound"}
       title={on ? "Mute ambient sound" : "Play ambient sound"}
-      className="group fixed bottom-5 left-5 z-[70] flex items-center gap-2 rounded-full border border-sacred/15 bg-void/70 px-3.5 py-2 backdrop-blur-md transition-colors hover:border-accent/50"
+      className="ambient-sound group fixed z-[70] flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-sacred/20 bg-void/80 p-2.5 backdrop-blur-md transition-colors hover:border-accent/60 focus-visible:ring-2 focus-visible:ring-accent sm:min-w-0 sm:justify-start sm:px-3.5 sm:py-2"
     >
       <span className={on ? "text-accent" : "text-sacred/55"}>
         <Lamp lit={on} className="h-5 w-5" />
       </span>
-      <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/60">
+      <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/66 sm:inline">
         {on ? "Sound on" : "Sound off"}
       </span>
     </button>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { sections } from "@/content/sections";
-import { VeiledBackdrop } from "@/components/atmosphere/VeiledBackdrop";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -55,11 +55,18 @@ const stages: RiteStage[] = [
 export default function FestivalsPage() {
   return (
     <div>
-      {/* The guardian, glimpsed through the dark — a blurred greyscale backdrop. */}
-      <VeiledBackdrop veil="/img/veil/vettai.webp" priority intensity="deep" />
-      {/* Hero — the night of the rite, gods kept in shadow */}
+      {/* Hero — the guardian showcased as a zoomed greyscale still in the
+          background; only the text sits on top. */}
       <section className="relative flex min-h-[78vh] items-center overflow-hidden">
         <div aria-hidden className="absolute inset-0">
+          <Image
+            src="/img/forms/vettai.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="kenburns object-cover object-[50%_56%] grayscale-[0.72] brightness-[0.68] contrast-[1.06]"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-void via-void/70 to-void/55" />
           <div className="absolute inset-0 bg-gradient-to-r from-void via-void/60 to-transparent" />
         </div>

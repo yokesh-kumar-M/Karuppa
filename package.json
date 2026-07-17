@@ -5,9 +5,11 @@
   "description": "Karuppa — a cinematic digital shrine for Karuppu Swamy, the guardian deity (kaval deivam) of Dravidian folk religion.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node generate/verify-registry.mjs",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "doctor": "node generate/verify-registry.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -15,7 +17,8 @@
     "next": "^15.0.0",
     "next-auth": "^4.24.14",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",

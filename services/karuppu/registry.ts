@@ -25,5 +25,4 @@ const byId = new Map<string, KaruppuForm>(forms.map((f) => [f.id, f]));
 /** Resolve a god by id (the sanctum routes' lookup). */
 export const formById = (id: string): KaruppuForm | undefined => byId.get(id);
 
-/** Alias — reads naturally at call sites that think in "services." */
-export const getKaruppu = formById;
+

@@ -12,6 +12,10 @@ export function BeliefTag({
   className?: string;
 }) {
   const label = kind === "verify" ? "VERIFY" : "BELIEF";
+  const explanation =
+    kind === "verify"
+      ? "To be confirmed against primary or temple sources before publishing."
+      : "A devotional tradition or claim — presented as such, not as established fact.";
   return (
     <span
       className={cn(
@@ -21,11 +25,8 @@ export function BeliefTag({
           : "border-ashgold/40 text-ashgold/90",
         className
       )}
-      title={
-        kind === "verify"
-          ? "To be confirmed against primary or temple sources before publishing."
-          : "A devotional tradition or claim — presented as such, not as established fact."
-      }
+      aria-label={`${label}: ${explanation}`}
+      title={explanation}
     >
       {label}
     </span>

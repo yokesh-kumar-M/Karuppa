@@ -8,7 +8,7 @@ gets his own statically-generated, code-split route at `/forms/<id>`.
 ```
 services/karuppu/
 ├─ types.ts            The shared contract (KaruppuForm, FormId)
-├─ registry.ts         Composes the manifests → forms[], formById, getKaruppu
+├─ registry.ts         Composes the manifests → forms[], formById
 ├─ index.ts            Public surface — import from "@/services/karuppu"
 ├─ sangili/manifest.ts ┐
 ├─ periya/manifest.ts  │
@@ -21,8 +21,7 @@ services/karuppu/
 ## Rules
 
 - **The app imports the roster, never a single god.** Pages and components pull
-  `forms` / `formById` from `@/services/karuppu` (or the back-compat re-export at
-  `@/content/forms`). This keeps the gods swappable and independently editable.
+  `forms` / `formById` from `@/services/karuppu`. This keeps the gods swappable and independently editable.
 - **Media is monochrome by law.** Every manifest points at two baked-greyscale
   web assets — `image` (the clear sanctum reveal) and `veil` (the tiny blurred
   backdrop "glimpse") — derived from the colour originals in `/assets` by

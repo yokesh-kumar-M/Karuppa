@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-/** Outlined ritual pill link with the reference site's `↗` arrow. */
+/** A high-contrast ritual action used for both internal and external journeys. */
 export function PillButton({
   href,
   children,
@@ -15,10 +15,10 @@ export function PillButton({
 }) {
   const isExternal = href.startsWith("http");
   const classes = cn(
-    "group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs uppercase tracking-[0.2em] transition-all duration-300",
+    "group inline-flex min-h-12 items-center justify-center gap-3 border px-5 py-3 text-[11px] font-medium uppercase tracking-[0.16em] outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-void",
     variant === "solid"
-      ? "bg-accent/90 text-void hover:bg-accent"
-      : "border border-sacred/25 text-sacred/90 hover:border-accent hover:text-accent",
+      ? "border-accent bg-accent text-void shadow-[0_0_28px_var(--glow)] hover:-translate-y-0.5 hover:bg-accent/90"
+      : "border-sacred/32 bg-void/18 text-sacred/90 backdrop-blur-sm hover:-translate-y-0.5 hover:border-accent hover:text-accent",
     className
   );
   const inner = (

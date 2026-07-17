@@ -2,15 +2,14 @@
  * optimize-images.mjs — the local asset pipeline (plan.md §8, "organize the files").
  *
  * Takes the heavy, full-colour source portraits in /assets/img-V1 (2.5–3.3 MB each,
- * never shipped) and derives two lightweight, BLACK-AND-WHITE web assets per god:
+ * never shipped) and derives two lightweight web assets per god:
  *
- *   public/img/forms/<id>.webp   the clear REVEAL still — the sanctum payoff.
- *   public/img/veil/<id>.webp    a tiny blurred-BACKDROP source — the "glimpse."
- *
- * Both are baked greyscale on purpose: the whole site is monochrome ash-on-black,
- * and the colour originals are kept in /assets so a future "where to glow" pass can
- * regenerate selectively. No hue ships. The veil is deliberately small — it is only
- * ever seen through a 48px blur, so resolution is wasted bytes.
+ *   public/img/forms/<id>.webp   the COLOUR showcase/reveal still. Hue is kept so
+ *                                CSS can dial "a little colour" per use (the
+ *                                backgrounds carry a restrained, mostly-desaturated
+ *                                tint; the sanctum reveal stays greyscale via CSS).
+ *   public/img/veil/<id>.webp    a tiny GREYSCALE blurred-BACKDROP source — the
+ *                                "glimpse," only ever seen through a 48px blur.
  *
  * Run:  node generate/optimize-images.mjs
  */
@@ -51,10 +50,9 @@ async function derive(id, file) {
   const stillOut = join(STILL_DIR, `${id}.webp`);
   const veilOut = join(VEIL_DIR, `${id}.webp`);
 
-  // Reveal still — greyscale, resized within a portrait box, webp.
+  // Showcase/reveal still — full COLOUR (CSS controls how much hue shows), webp.
   await sharp(src)
     .rotate() // honour EXIF orientation
-    .grayscale()
     .resize({ ...STILL.box, fit: "inside", withoutEnlargement: true })
     .webp({ quality: STILL.quality, effort: 5 })
     .toFile(stillOut);
@@ -76,7 +74,7 @@ async function main() {
   await mkdir(STILL_DIR, { recursive: true });
   await mkdir(VEIL_DIR, { recursive: true });
 
-  console.log("Deriving black-and-white web assets from assets/img-V1 …\n");
+  console.log("Deriving web assets (colour still + greyscale veil) from assets/img-V1 …\n");
   for (const [id, file] of Object.entries(SOURCES)) {
     await derive(id, file);
   }

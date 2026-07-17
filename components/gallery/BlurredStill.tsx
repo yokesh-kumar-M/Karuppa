@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { KaruppuForm } from "@/content/forms";
+import type { KaruppuForm } from "@/services/karuppu";
 import { BeliefTag } from "@/components/ui/BeliefTag";
 
 /**
@@ -16,7 +16,7 @@ export function BlurredStill({ form }: { form: KaruppuForm }) {
     <Link
       href={`/forms/${form.id}`}
       aria-label={`View ${form.name} — ${form.epithet}`}
-      className="group relative block overflow-hidden rounded-2xl border border-sacred/10 outline-none transition-colors duration-500 hover:border-sacred/30 focus-visible:border-sacred/40"
+      className="group relative block overflow-hidden border border-sacred/12 outline-none transition-colors duration-500 hover:border-sacred/30 focus-visible:ring-2 focus-visible:ring-accent"
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-void">
         {/* The still — blurred (threshold → veil on hover) and crushed toward
@@ -34,13 +34,13 @@ export function BlurredStill({ form }: { form: KaruppuForm }) {
         {/* Veil — keep it near-black. No colour, only depth. */}
         <div className="absolute inset-0 bg-gradient-to-t from-void via-void/55 to-void/30" />
 
-        {/* Motion marker — the reserved clip lives here, later. */}
+        {/* A calm archive marker — this is deliberately a veiled study. */}
         <span className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-sacred/15 bg-void/40 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.25em] text-sacred/55 backdrop-blur-sm">
           <span
             aria-hidden
             className="inline-block h-1.5 w-1.5 rounded-full bg-sacred/70"
           />
-          Motion soon
+          Veiled study
         </span>
 
         {/* Identity — Tamil + English, with the act this form is known for. */}
@@ -48,10 +48,10 @@ export function BlurredStill({ form }: { form: KaruppuForm }) {
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-sacred/70">
             {form.num} · {form.region.split(" · ")[0]}
           </p>
-          <p className="mt-2 font-tamil text-2xl text-sacred [text-shadow:0_1px_18px_rgba(0,0,0,0.9)]">
+          <p lang="ta" className="mt-2 font-tamil text-2xl text-sacred [text-shadow:0_1px_18px_rgba(0,0,0,0.9)]">
             {form.tamil}
           </p>
-          <p className="mt-0.5 font-display text-lg font-semibold text-sacred [text-shadow:0_1px_18px_rgba(0,0,0,0.9)]">
+          <p className="mt-0.5 font-serif text-xl font-medium text-sacred [text-shadow:0_1px_18px_rgba(0,0,0,0.9)]">
             {form.name}
             {form.verify && (
               <>

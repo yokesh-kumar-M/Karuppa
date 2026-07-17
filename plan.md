@@ -136,14 +136,14 @@ Until clips exist, the blurred **photo** stands in — satisfying the "photo blu
 
 | Phase | Work | Touches | Status |
 |---|---|---|---|
-| **0 — Font decision** | Pick Path A/B/C; if A, trace the wordmark SVG | *blocks nothing else* | ⏳ deferred — interim keeps Cinzel/Catamaran; ignite carries the "ignition" |
+| **0 — Font decision** | Pick Path A/B/C; if A, trace the wordmark SVG | *blocks nothing else* | ✅ done — brush wordmarks traced as PNGs (`public/img/brand`), wired via `KaruppuWordmark`; they arrived **red** → see §11, the blood seam |
 | **1 — Monochrome refactor** | Gut palette to 4 tokens; delete per-form themes, fire-text, aura, CursorEmber, colored EmberField | `app/globals.css`, `content/forms.ts`, `lib/fonts.ts` | ✅ done |
 | **2 — Type system** | Wire wordmark + display font; rebuild `.ignite` as brightness/blur only | `lib/fonts.ts`, `app/layout.tsx`, landing components | ✅ `.ignite` rebuilt (no hue); wordmark = ash ignite. SVG wordmark = Phase 0 |
 | **3 — Blur language** | Standardize blur scale (threshold/veil/near) across `MotionSlot` usages | `components/media/MotionSlot.tsx`, landing + gallery | ✅ done — `BlurLevel` scale 48/24/8px |
 | **4 — Pages pass** | Strip color from all 11 routes; swap `/temples` map for typographic atlas | `app/**/page.tsx`, temple components | ✅ done — all hue removed; temples already typographic |
 | **5 — Sigils** | Monochrome line-glyph per form to replace color identity | `glyphs.tsx`, `PowerSigil`, forms gallery | ✅ done — ash mandala sigil + name |
-| **6 — Video** | Generate 6 monochrome `act` clips, host, drop into `video` fields | `content/forms.ts` + provider | ⏳ pending assets — sockets ready (`video?` field + `MotionSlot`) |
-| **7 — Polish / deploy** | Grain at whisper opacity, Lighthouse, a11y, OG images, Vercel deploy | global | ◐ partial — grain dropped to 0.045, light-leak removed; build green. Lighthouse/OG/deploy TODO |
+| **6 — Video** | Generate 6 monochrome `act` clips, host, drop into `video` fields | `services/karuppu/*/manifest.ts` + provider | ⏳ pending assets — sockets **production-grade** (lazy, paused-offscreen, reduced-motion, dual-codec, error fallback); runbook in §12 |
+| **7 — Polish / deploy** | Grain at whisper opacity, Lighthouse, a11y, OG images, Vercel deploy | global | ◐ nearly done — icons/OG/sitemap/robots/manifest/404/error/JSON-LD shipped (§13); Lighthouse + deploy checklist remain |
 
 Phases 1–5 need **zero new assets** — pure refinement of what exists, so the new direction is visible immediately. Video (6) layers in over time without touching component code.
 
@@ -164,3 +164,186 @@ Phases 1–5 need **zero new assets** — pure refinement of what exists, so the
 - **Glow deferred.** Everything stays B&W; a future plan will say *where* to glow (brightness/bloom only, never hue). `VeiledBackdrop` and `GlassNav` leave the seam.
 
 `tsc --noEmit` + `next build` green; all 20 routes prerender.
+
+---
+
+## 11. The blood seam (the law, amended)
+
+Phase 0 resolved itself: the *Karuppu* film wordmark was recreated as two brush
+PNGs (`public/img/brand/karuppu-{english,tamil}-wordmark.png`, transparent,
+blood-red) and wired via `components/brand/KaruppuWordmark.tsx` into the hero,
+the glass nav and the footer. The wordmark arrived **red** — so the monochrome
+law is amended, not repealed:
+
+> **The room stays black. Exactly one colour may cut it: the blood red of the
+> wordmark.** The seam touches *marks and edges* only — never floods.
+
+| May carry the seam (`--accent` / `text-fire`) | Must stay greyscale |
+|---|---|
+| The wordmark + its `drop-shadow` bloom | Body text, prose, descriptions |
+| Hairlines (hero rules, OG card rules) | Panels, cards, page backgrounds |
+| Active nav pill, seal mandala + form name on the Threshold | The photographs (until the glow pass) |
+| CTA fills (`PillButton` solid), red eyebrow numerals | Any area fill larger than a pill |
+| "The reveal · coming in motion" marker dots | |
+
+Second, quieter exception: **temple gold** (`--color-ashgold: #d8b56d`) may
+whisper on *ritual artefacts only* — offering tags, shrine cards, belief
+markers (`BeliefTag`, `OfferingsLedger`, `ShrineCard`).
+
+Canonical tokens (one block in `globals.css`, duplicates merged):
+`--void #040404 · --ash #eee8dd · --dim 58% · --faint 14% · --accent #ff1814 ·
+--glow rgba(255,24,20,.18)` + seam family `fire/ember/blood` + `ashgold`.
+Repoint `--accent`/`--glow` and the whole seam moves at once.
+
+Contrast note: `#ff1814` on `#040404` ≈ **5.3:1** — passes WCAG AA for normal
+text; keep red text at `text-xs`+ and never on `stone` panels below 4.5:1.
+
+---
+
+## 12. Video drop-in runbook (for the day the clips arrive)
+
+The sockets are now production-grade. `MotionSlot` always paints the still
+(LCP, bots, reduced-motion); when a `video` exists it lazy-mounts near the
+viewport, fades in only once actually *playing*, pauses offscreen, plays only
+the active landing layer (`paused` prop), and falls back to the still on any
+error. Nothing to build when assets land — only these steps:
+
+1. **Grade + trim** each clip to its `act` (6–12 s, loopable, near-black,
+   monochrome — the seam belongs to the UI, not the footage).
+2. **Compress** into both codecs (per god, from a master `<id>-master.mov`):
+   ```bash
+   ffmpeg -i sangili-master.mov -an -vf "scale=-2:1080,fps=24" \
+     -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p -movflags +faststart \
+     public/video/sangili.mp4
+   ffmpeg -i sangili-master.mov -an -vf "scale=-2:1080,fps=24" \
+     -c:v libvpx-vp9 -b:v 0 -crf 34 -row-mt 1 \
+     public/video/sangili.webm
+   ```
+   Target ≤ 2–4 MB per clip. Dark, low-detail footage compresses extremely well.
+3. **Wire** one field in the god's manifest (`services/karuppu/<id>/manifest.ts`):
+   ```ts
+   video: { webm: "/video/sangili.webm", mp4: "/video/sangili.mp4" },
+   ```
+   (a bare string also works: `video: "/video/sangili.mp4"`).
+4. **Verify**: Threshold shows it *blurred* behind the doors; `/forms/<id>`
+   plays it clear; OS "reduce motion" shows the still; kill the file path and
+   the still silently returns.
+5. **If the six together exceed ~15 MB**, move them to Vercel Blob / Mux /
+   Cloudinary and put the absolute URLs in the same fields — the sockets take
+   any URL.
+
+---
+
+## 13. Phase 7 — shipped this pass, and the launch checklist
+
+Shipped now (all generated, committed, zero runtime cost):
+- **Brand derivatives** (`generate/brand-derivatives.mjs`, run any time the
+  wordmarks change): favicon + `app/icon.png` 512 + `apple-icon.png` +
+  maskable PWA icons; site-wide OG card (`app/opengraph-image.png` — wordmark
+  on void, red hairlines, tagline); **six per-sanctum OG cards**
+  (`public/og/<id>.jpg` — the god greyscale right, red eyebrow, named) wired
+  into `generateMetadata`.
+- **SEO shell**: `sitemap.ts` (17 URLs), `robots.ts`, `manifest.ts` (PWA,
+  void-black), WebSite JSON-LD, `twitter:card`, env-driven `metadataBase`
+  (`NEXT_PUBLIC_SITE_URL`).
+- **Edges**: themed `not-found.tsx` ("இங்கு எதுவும் இல்லை / The dark holds
+  nothing here") and `error.tsx` with retry — the shrine never shows a raw
+  stack.
+
+Launch checklist (remaining):
+- [ ] Set `NEXT_PUBLIC_SITE_URL` on Vercel to the real domain.
+- [ ] Lighthouse pass on `/`, `/guardian`, `/forms/sangili` (LCP < 2.5 s — the
+      hero still is the LCP; wordmark PNGs are `priority`).
+- [ ] Validate OG cards (opengraph.xyz / the social debuggers) after deploy.
+- [ ] Cross-device sweep: hero wordmark stack at 360 px / 768 px / 1440 px,
+      `GlassNav` overflow scroll on mobile, reduced-motion on.
+- [ ] `npm run build` + smoke the 20 routes on the preview URL.
+
+Roadmap after launch (in order of payoff):
+1. **The clips** (§12) — the whole design converges on this payoff.
+2. **The glow pass** — decide where photographs may *bloom* (brightness, never
+   hue); candidates: sanctum reveal hover, festival fire sequence.
+3. **Sanctum deepening** — per-god chapters (origin, temple, offering) inside
+   each microservice manifest; the structure already supports it.
+4. **Ambient sound v2** — swap the synthesized drone for a recorded urumi /
+   temple-bell bed behind a consent toggle (keep the Web-Audio fallback).
+5. **Vercel Analytics + Speed Insights** — one import each, privacy-clean.
+6. **Tamil-first mode** — a `ta` locale that leads with Tamil and drops
+      English to the eyebrow line (content model already carries both).
+
+---
+
+## 14. The Six Rooms — per-god aesthetics (the law, amended again)
+
+§11's clause "gods have no colours of their own" is repealed — carefully. The
+shrine's shared halls (landing hero, chapters, nav, footer) still carry exactly
+one colour, the blood red. But behind each god's door, the sanctum is HIS room:
+
+> **The room stays black; the photographs stay greyscale. Inside a sanctum the
+> seam re-points to the god's own colour — marks, edges and air only, never a
+> flood. On the Threshold, each door already glows with the light of the room
+> behind it.**
+
+Mechanics (why this costs almost nothing): `--accent` / `--glow` are `@theme
+inline` tokens, so seam utilities (`text-accent`, `bg-accent`, `border-accent`,
+alpha variants) resolve the variable *at the element*.
+`components/forms/SanctumRoom.tsx` sets the two vars + `data-god` on the route
+wrapper and the entire seam re-tints beneath it; `Seal` does the same per
+landing door; the sanctum's prev/next links carry their *neighbour's* accent.
+No component knows about colour.
+
+The six rooms (each `theme` lives in `services/karuppu/<id>/manifest.ts`,
+grounded in that god's own lore):
+
+| God | Room (element) | Seam | Weather (`AtmosphereKind`) |
+|---|---|---|---|
+| 01 Sangili | iron | `#7db8e8` forged steel | `iron` — falling chain-glints |
+| 02 Periya | ember | `#ff7a33` molten | `embers` — few, large, rising |
+| 03 Chinna | camphor | `#c8ecf6` cold white flame | `camphor` — swift darting trails |
+| 04 Mangadu | the grove | `#86c46a` leaf | `grove` — sinking leaf-flecks |
+| 05 Sangani | the kala pani | `#b493f0` deep water | `spirits` — lights drifting shoreward |
+| 06 Vettai | moonlit mist | `#5fd0b4` pale teal | `hunt` — fireflies + paired eye-glints |
+
+The weather is `components/atmosphere/SanctumAtmosphere.tsx` — ONE canvas,
+six signatures: sparse motes in the god's colour, `mix-blend-screen` (pure
+added light: glows over the void, vanishes over ash text, can never obstruct
+reading), paused when the tab hides, halved on lean connections, collapsed to
+a single static frame under reduced motion. His aura breathes via
+`aura-breathe` (radial `var(--glow)`); the landing backdrop washes ~9% of the
+active door's colour into the dark as it crossfades.
+
+### Stabilizers shipped with this pass
+
+- **`generate/verify-registry.mjs`** — the build gate (npm `prebuild`, also
+  `npm run doctor`): per god, id matches folder, num two-digit + unique,
+  image/veil/OG files exist on disk, local `/video/…` paths resolve, accent is
+  hex + unique + ≥ 4.5:1 on the void (WCAG AA), glow is rgba, exactly three
+  aspects, god registered in registry.ts. A broken manifest refuses the build.
+- **`dynamicParams = false`** on `/forms/[form]` — the roster is sealed at
+  build time; unknown doors 404 without rendering.
+- **Sanctum-scoped `loading.tsx` + `error.tsx`** — a fault in one room never
+  darkens the shrine. ⚠ A ROOT `app/loading.tsx` was tried and REVERTED: the
+  root Suspense boundary left the static landing stuck behind React's
+  streaming reveal (`$RC`) — content shipped inside `<div hidden id="S:0">`
+  and never swapped in (extension-heavy browsers can kill the inline reveal).
+  Do not reintroduce a root loading boundary on this static site.
+- **Cache headers** (`next.config.mjs`): `/img`, `/icons`, `/og`, `/video` →
+  30 days + stale-while-revalidate. Never `immutable`: the pipelines overwrite
+  the same filenames in place.
+- **Lean media** (`lib/adaptive.ts`): on Data Saver / 2G / ≤2 GB devices,
+  `MotionSlot` never mounts video (the still is the designed fallback) and the
+  weather halves its motes. Load-shedding, not degradation.
+- **Aspects**: each manifest carries three titled marks (`aspects`), rendered
+  as the sanctum's three-card grid between the telling and the act.
+
+### Adding a god now means
+
+One folder + one registry line, as before, plus: pick an unused accent (the
+verifier enforces contrast and uniqueness), choose an `AtmosphereKind` (or add
+a seventh signature in `SanctumAtmosphere`), name the room's `element`, write
+the three `aspects`.
+
+**Status (2026-07-02):** all six rooms live and verified in-browser (landing
+wordmark ignite, tinted doors, four rooms eyeballed + two spot-checked);
+`typecheck` + `build` green — 27 static routes, sanctum page JS ≈ 3.6 kB;
+prebuild gate green (accents 7.9–16.4 : 1 on the void).

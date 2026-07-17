@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { forms, formById } from "@/content/forms";
+import { forms, formById } from "@/services/karuppu";
 import { MotionSlot } from "@/components/media/MotionSlot";
-import { VeiledBackdrop } from "@/components/atmosphere/VeiledBackdrop";
+import { SanctumRoom } from "@/components/forms/SanctumRoom";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { BeliefTag } from "@/components/ui/BeliefTag";
 import { RitualDivider } from "@/components/ui/RitualDivider";
 
 /**
  * A god's sanctum — his own statically-generated, code-split route (the
- * "microservice"). Generated from the registry, so a new form needs no new
- * file. Here the figure is finally revealed; the hero MotionSlot is already
- * wired for his motion video the day one is added to the registry.
+ * "microservice"), and since plan.md §14 his own ROOM: inside this route the
+ * shrine's seam re-points to his colour and his weather fills the air.
+ * Generated from the registry, so a new form needs no new file. Here the
+ * figure is finally revealed; the hero MotionSlot is already wired for his
+ * motion video the day one is added to the registry.
  */
 export function generateStaticParams() {
   return forms.map((f) => ({ form: f.id }));
 }
+
+/** The roster is sealed at build time — an unknown door 404s without render. */
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -29,6 +35,19 @@ export async function generateMetadata({
   return {
     title: f.name,
     description: `${f.name} (${f.tamil}) — ${f.epithet}. ${f.description}`,
+    openGraph: {
+      title: `${f.name} — ${f.epithet}`,
+      description: f.description,
+      images: [
+        {
+          url: `/og/${f.id}.jpg`,
+          width: 1200,
+          height: 630,
+          alt: `${f.name} (${f.tamil}) — ${f.epithet}`,
+        },
+      ],
+    },
+    twitter: { card: "summary_large_image" },
   };
 }
 
@@ -46,9 +65,7 @@ export default async function SanctumPage({
   const next = forms[(idx + 1) % forms.length];
 
   return (
-    <div data-form={f.id}>
-      {/* The same god, glimpsed in the dark behind the whole sanctum. */}
-      <VeiledBackdrop veil={f.veil} intensity="deep" />
+    <SanctumRoom form={f}>
       {/* Hero — the reveal: his blurred presence resolves to a clear (B&W) still.
           The MotionSlot plays his video here the day the registry has one. */}
       <section className="relative flex min-h-dvh items-center overflow-hidden">
@@ -87,6 +104,10 @@ export default async function SanctumPage({
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.25em] text-sacred/50">
               {f.region}
             </p>
+            <p className="mt-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent/80">
+              <span aria-hidden className="inline-block h-px w-8 bg-accent/50" />
+              The room of {f.theme.element}
+            </p>
           </div>
         </div>
       </section>
@@ -97,27 +118,43 @@ export default async function SanctumPage({
           {f.description}
         </p>
 
+        {/* His three marks — who he is, in three held breaths. */}
+        <div className="mt-14 grid gap-4 sm:grid-cols-3">
+          {f.aspects.map((a) => (
+            <div
+              key={a.title}
+              className="rounded-2xl border border-sacred/10 bg-stone/40 p-6"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
+                {a.title}
+              </p>
+              <p className="mt-3 font-serif text-base italic leading-snug text-sacred/70">
+                {a.line}
+              </p>
+            </div>
+          ))}
+        </div>
+
         <div className="mt-12 rounded-2xl border border-sacred/10 bg-stone/40 p-7">
           <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-            The reveal · coming in motion
+            The remembered act
           </p>
           <p className="mt-3 font-serif text-lg italic leading-snug text-sacred/75 md:text-xl">
             {f.act}
-          </p>
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/35">
-            A video of this god&rsquo;s motion will play here.
           </p>
         </div>
       </section>
 
       <RitualDivider />
 
-      {/* Move between fires */}
+      {/* Move between fires — each neighbouring door already glows with ITS
+          god's colour, a glimpse of the next room before the crossing. */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="flex items-center justify-between gap-4">
           <Link
             href={`/forms/${prev.id}`}
+            style={{ "--accent": prev.theme.accent } as CSSProperties}
             className="group flex flex-col text-left"
           >
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/40">
@@ -135,6 +172,7 @@ export default async function SanctumPage({
           </Link>
           <Link
             href={`/forms/${next.id}`}
+            style={{ "--accent": next.theme.accent } as CSSProperties}
             className="group flex flex-col text-right"
           >
             <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-sacred/40">
@@ -146,6 +184,6 @@ export default async function SanctumPage({
           </Link>
         </div>
       </section>
-    </div>
+    </SanctumRoom>
   );
 }

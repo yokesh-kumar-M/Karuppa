@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { forms } from "@/content/forms";
+import Image from "next/image";
+import { forms } from "@/services/karuppu";
 import { sections } from "@/content/sections";
-import { VeiledBackdrop } from "@/components/atmosphere/VeiledBackdrop";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -17,7 +17,7 @@ const data = sections.gallery;
 export const metadata: Metadata = {
   title: data.title,
   description:
-    "The hall of motion — the six fires as dark, blurred teasers. The clear stills live on each god's page; the motion is coming. Enter a fire to see a god.",
+    "A veiled gallery of six forms. Follow each shadow into its own sanctum to see the full artistic study.",
 };
 
 /**
@@ -30,10 +30,20 @@ export const metadata: Metadata = {
 export default function GalleryPage() {
   return (
     <>
-      {/* The guardian, glimpsed through the dark — a blurred greyscale backdrop. */}
-      <VeiledBackdrop veil="/img/veil/periya.webp" intensity="deep" />
-      {/* Hero */}
+      {/* Hero — the guardian showcased as a zoomed greyscale still in the
+          background; only the text sits on top. */}
       <section className="relative flex min-h-[60vh] items-center overflow-hidden">
+        <Image
+          src="/img/forms/periya.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="kenburns object-cover object-[50%_56%] grayscale-[0.72] brightness-[0.68] contrast-[1.06]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-void via-void/85 to-void/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-void/70" />
         <FlameMandala
           aria-hidden
           className="slow-spin pointer-events-none absolute -right-16 top-1/2 h-[62vh] max-h-[560px] w-[62vh] max-w-[560px] -translate-y-1/2 text-accent opacity-[0.06]"
@@ -49,9 +59,8 @@ export default function GalleryPage() {
             {data.title}
           </SectionHeading>
           <p className="mt-8 max-w-2xl font-serif text-xl italic leading-relaxed text-sacred/75 md:text-2xl">
-            The fires of Karuppu, gathered in one dark hall. You will not see a
-            face here — each god is shown clearly only on his own page. This is a
-            doorway, and a promise of motion to come.
+            The forms of Karuppu, gathered in one dark hall. Each remains veiled
+            here; follow a shadow into its own sanctum to see the full study.
           </p>
         </div>
       </section>
@@ -103,8 +112,8 @@ export default function GalleryPage() {
             </span>
           </div>
           <p className="mt-6 text-sm leading-relaxed text-sacred/55">
-            Six fires are gathered here. Tradition speaks of many more, and they
-            will be added in time.
+            Six forms are gathered here. Devotional tradition remembers the
+            guardian through many more names and local forms.
           </p>
         </ScrollReveal>
       </section>

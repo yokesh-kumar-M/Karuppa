@@ -20,6 +20,7 @@ export function ScrollReveal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
+  const [enhanced, setEnhanced] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -29,6 +30,8 @@ export function ScrollReveal({
       setShown(true);
       return;
     }
+
+    setEnhanced(true);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -50,7 +53,9 @@ export function ScrollReveal({
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
         "transition-all duration-700 ease-out will-change-transform motion-reduce:transition-none",
-        shown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0",
+        !enhanced || shown
+          ? "translate-y-0 opacity-100"
+          : "translate-y-8 opacity-0",
         className
       )}
     >

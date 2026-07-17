@@ -22,13 +22,13 @@ export function SectionHeading({
   return (
     <Tag
       className={cn(
-        "font-display font-semibold leading-[1.04] tracking-tight",
-        accent ? "text-accent" : "text-sacred",
+        "font-serif font-medium leading-[0.98] tracking-[-0.025em]",
+        accent ? "brush-heading text-accent" : "text-sacred",
         className
       )}
     >
       {tamil && (
-        <span className="mb-3 block font-tamil text-[0.5em] font-medium tracking-normal text-sacred/70">
+        <span lang="ta" className="mb-3 block font-tamil text-[0.5em] font-medium tracking-normal text-sacred/72">
           {tamil}
         </span>
       )}

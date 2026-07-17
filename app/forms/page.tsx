@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { forms } from "@/content/forms";
+import { forms } from "@/services/karuppu";
 import { Seal } from "@/components/landing/Seal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -10,13 +10,12 @@ import { KolamStar } from "@/components/icons";
 export const metadata: Metadata = {
   title: "The Forms",
   description:
-    "An index of the forms — each guardian a glowing sigil, not a portrait. Open one to see the god.",
+    "Enter the first six rooms of Karuppu Swamy — each form carrying a distinct name, element and memory.",
 };
 
 /**
- * The Forms index — a calm, dark grid of sigils (the navigable counterpart to
- * the immersive Threshold). No portraits: each god is his seal, linking to his
- * sanctum. Regenerates from the registry, so new fires appear on their own.
+ * The Forms index — a navigable set of veiled portals into each sanctum.
+ * Regenerates from the registry, so every registered form appears on its own.
  */
 export default function FormsIndexPage() {
   return (
@@ -35,8 +34,8 @@ export default function FormsIndexPage() {
             The Fires
           </SectionHeading>
           <p className="mx-auto mt-8 max-w-2xl font-serif text-xl italic leading-relaxed text-sacred/75 md:text-2xl">
-            One deity, many forms. Each is a sigil, not a portrait — open one to
-            see the god.
+            One guardian, many rooms. Enter a form to discover its name, place,
+            element and devotional memory.
           </p>
         </div>
       </section>
@@ -62,8 +61,8 @@ export default function FormsIndexPage() {
           </span>
         </div>
         <p className="mt-6 flex items-center justify-center gap-2 text-sm text-sacred/50">
-          <BeliefTag kind="belief" /> Tradition speaks of 108 forms. More fires
-          will be added here.
+          <BeliefTag kind="belief" /> Tradition remembers the guardian through
+          many more names and local forms.
         </p>
         <div className="mt-8 flex justify-center">
           <PillButton href="/">Back to home</PillButton>

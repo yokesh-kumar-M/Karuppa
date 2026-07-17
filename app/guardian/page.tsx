@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { VeiledBackdrop } from "@/components/atmosphere/VeiledBackdrop";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -64,45 +63,47 @@ const timeline = [
 export default function GuardianPage() {
   return (
     <>
-      {/* The guardian, glimpsed through the dark — a faint blurred backdrop. */}
-      <VeiledBackdrop veil="/img/veil/periya.webp" intensity="deep" />
-      {/* Hero — split layout: text-led, with one blurred still (plan.md §4). */}
-      <section className="mx-auto grid max-w-7xl items-center gap-12 px-6 pb-20 pt-32 md:grid-cols-2 md:gap-16 md:pt-40">
-        <ScrollReveal>
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl border border-sacred/10">
-            <Image
-              src="/img/forms/periya.webp"
-              alt="Karuppu Swamy, the guardian deity, glimpsed through the dark"
-              fill
-              priority
-              sizes="(max-width: 768px) 90vw, 40vw"
-              className="scale-110 object-cover blur-[12px] grayscale brightness-[0.72]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-void/80 via-void/20 to-transparent" />
-          </div>
-        </ScrollReveal>
+      {/* Hero — the guardian showcased as a zoomed greyscale still in the
+          background; only the text sits on top, no frame. */}
+      <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+        <Image
+          src="/img/forms/periya.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="kenburns object-cover object-[50%_56%] grayscale-[0.72] brightness-[0.68] contrast-[1.06]"
+        />
+        {/* Scrims — keep the text readable over the showcased still. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-void via-void/80 to-void/35" />
+        <div className="absolute inset-0 bg-gradient-to-t from-void via-void/25 to-void/55" />
 
-        <ScrollReveal delay={120}>
-          <Eyebrow num="01">The Guardian</Eyebrow>
-          <SectionHeading
-            as="h1"
-            tamil="காவலன்"
-            className="mt-5 text-4xl md:text-6xl"
-          >
-            Who is Karuppu Swamy
-          </SectionHeading>
-          <p className="mt-7 font-serif text-xl italic leading-relaxed text-sacred/80 md:text-2xl">
-            A fierce protector, an upholder of justice, an enforcer of dharma —
-            the dark god who guards the threshold and from whom no wrongdoer can
-            hide.
-          </p>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-sacred/60">
-            Karuppu — also Karuppasamy, Karuppannasamy — is one of the most widely
-            worshipped guardian deities of Dravidian folk religion, honoured
-            across Tamil Nadu, Kerala, Sri Lanka and a diaspora that spans the
-            globe.
-          </p>
-        </ScrollReveal>
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pt-24">
+          <ScrollReveal>
+            <div className="max-w-2xl">
+              <Eyebrow num="01">The Guardian</Eyebrow>
+              <SectionHeading
+                as="h1"
+                tamil="காவலன்"
+                className="mt-5 text-4xl md:text-6xl"
+              >
+                Who is Karuppu Swamy
+              </SectionHeading>
+              <p className="mt-7 font-serif text-xl italic leading-relaxed text-sacred/85 md:text-2xl [text-shadow:0_2px_20px_rgba(0,0,0,0.95)]">
+                A fierce protector, an upholder of justice, an enforcer of dharma
+                — the dark god who guards the threshold and from whom no
+                wrongdoer can hide.
+              </p>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-sacred/70 [text-shadow:0_1px_16px_rgba(0,0,0,0.95)]">
+                Karuppu — also Karuppasamy, Karuppannasamy — is one of the most
+                widely worshipped guardian deities of Dravidian folk religion,
+                honoured across Tamil Nadu, Kerala, Sri Lanka and a diaspora that
+                spans the globe.
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
       </section>
 
       {/* The Name — pull quote */}

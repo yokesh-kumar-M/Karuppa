@@ -1,10 +1,9 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { BeliefTag } from "@/components/ui/BeliefTag";
 import { RitualDivider } from "@/components/ui/RitualDivider";
 
-export function GoogleLoginCard() {
+export function GoogleLoginCard({ configured }: { configured: boolean }) {
   return (
     <section className="relative isolate mx-auto flex min-h-dvh w-full max-w-7xl items-center overflow-hidden px-6 py-10 sm:px-8">
       <div
@@ -15,26 +14,28 @@ export function GoogleLoginCard() {
         <div className="relative flex flex-col justify-center">
           <div className="absolute -left-10 top-0 hidden h-48 w-48 rounded-full border border-sacred/8 bg-sacred/[0.02] blur-2xl lg:block" />
           <p className="font-mono text-[11px] uppercase tracking-[0.45em] text-sacred/38">
-            Sacred access gate
+            {configured ? "Sacred access gate" : "Local preview mode"}
           </p>
           <h1 className="mt-5 max-w-xl font-display text-4xl font-semibold tracking-[0.08em] text-sacred sm:text-5xl lg:text-7xl">
-            Enter Karuppa through a verified Google identity.
+            {configured
+              ? "Enter Karuppa through a verified Google identity."
+              : "The shrine is open while sign-in is unconfigured."}
           </h1>
           <p className="mt-6 max-w-2xl font-serif text-lg leading-relaxed text-sacred/68 sm:text-xl">
-            This shrine is not open to anonymous wandering. The login gate is
-            part of the ritual: one verified account, then a direct return to
-            the landing page.
+            {configured
+              ? "The login gate uses one verified Google account, then returns directly to the landing page."
+              : "Public pages stay available in a fresh checkout. Add the Google and NextAuth variables when this project needs controlled access."}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center rounded-full border border-sacred/14 bg-sacred/[0.03] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-sacred/55">
-              Protected shrine
+              {configured ? "Protected shrine" : "Public preview"}
             </span>
             <span className="inline-flex items-center rounded-full border border-sacred/14 bg-sacred/[0.03] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-sacred/55">
               Instant redirect
             </span>
             <span className="inline-flex items-center rounded-full border border-sacred/14 bg-sacred/[0.03] px-4 py-2 font-mono text-[10px] uppercase tracking-[0.24em] text-sacred/55">
-              No guest mode
+              {configured ? "No guest mode" : "Auth optional"}
             </span>
           </div>
 
@@ -43,8 +44,17 @@ export function GoogleLoginCard() {
           </div>
 
           <p className="mt-8 max-w-xl text-sm leading-relaxed text-sacred/42">
-            After login, you return to <span className="text-sacred">/</span>.
-            Google is used only as the gatekeeper for access.
+            {configured ? (
+              <>
+                After login, you return to <span className="text-sacred">/</span>.
+                Google is used only as the gatekeeper for access.
+              </>
+            ) : (
+              <>
+                The public experience remains available at{" "}
+                <span className="text-sacred">/</span>.
+              </>
+            )}
           </p>
         </div>
 
@@ -57,23 +67,29 @@ export function GoogleLoginCard() {
                 <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-sacred/34">
                   Entry card
                 </p>
-                <BeliefTag kind="verify" />
+                <span className="rounded-sm border border-sacred/18 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-sacred/55">
+                  {configured ? "Secure" : "Preview"}
+                </span>
               </div>
 
               <div className="mt-5 space-y-3">
                 <h2 className="font-display text-2xl font-semibold tracking-[0.08em] text-sacred sm:text-3xl">
-                  Sign in to unlock the shrine.
+                  {configured ? "Sign in to unlock the shrine." : "Sign-in is ready to configure."}
                 </h2>
                 <p className="max-w-md text-sm leading-relaxed text-sacred/58">
-                  Your Google account becomes the key. The rest of the site
-                  stays sealed until the sign-in completes.
+                  {configured
+                    ? "Your Google account becomes the key. The rest of the site stays sealed until sign-in completes."
+                    : "Use the environment-variable template to enable Google access without changing this interface."}
                 </p>
               </div>
 
               <div className="mt-8 rounded-[1.5rem] border border-sacred/10 bg-void/40 p-4">
                 <button
                   type="button"
-                  onClick={() => signIn("google", { callbackUrl: "/" })}
+                  onClick={() =>
+                    configured && signIn("google", { callbackUrl: "/" })
+                  }
+                  disabled={!configured}
                   className="group inline-flex w-full items-center justify-center gap-3 rounded-full border border-sacred/14 bg-void px-5 py-3.5 text-left text-sacred transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone hover:shadow-[0_18px_50px_-28px_rgba(0,0,0,0.85)] focus:outline-none focus:ring-2 focus:ring-sacred/50 focus:ring-offset-0"
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sacred/5 ring-1 ring-inset ring-sacred/10">
@@ -84,7 +100,7 @@ export function GoogleLoginCard() {
                       Continue with
                     </span>
                     <span className="font-display text-lg font-semibold tracking-[0.08em] text-sacred">
-                      Google
+                      {configured ? "Google" : "Google sign-in not configured"}
                     </span>
                   </span>
                   <span
@@ -97,13 +113,15 @@ export function GoogleLoginCard() {
               </div>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <InfoTile label="Gate" value="Required" />
+                <InfoTile label="Gate" value={configured ? "Required" : "Inactive"} />
                 <InfoTile label="Session" value="Secure" />
                 <InfoTile label="Return" value="Landing page" />
               </div>
 
               <p className="mt-5 text-center text-xs leading-relaxed text-sacred/38">
-                We only ask Google to verify identity and authorize entry.
+                {configured
+                  ? "We only ask Google to verify identity and authorize entry."
+                  : "Add the Google and NextAuth variables from .env.example to enable this gate."}
               </p>
             </div>
           </div>

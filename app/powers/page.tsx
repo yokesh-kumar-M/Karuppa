@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { sections } from "@/content/sections";
-import { VeiledBackdrop } from "@/components/atmosphere/VeiledBackdrop";
 import { ScrollReveal } from "@/components/motion/ScrollReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -113,10 +113,18 @@ const powers: Power[] = data.points.map((p, i) => ({
 export default function PowersPage() {
   return (
     <div>
-      {/* The guardian, glimpsed through the dark — a blurred greyscale backdrop. */}
-      <VeiledBackdrop veil="/img/veil/vettai.webp" priority intensity="deep" />
-      {/* Hero — a dark invocation: the glimpse, the sigil, the title */}
+      {/* Hero — the guardian showcased as a zoomed greyscale still in the
+          background; only the text sits on top. */}
       <section className="relative flex min-h-[88vh] items-center overflow-hidden">
+        <Image
+          src="/img/forms/vettai.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="kenburns object-cover object-[50%_56%] grayscale-[0.72] brightness-[0.68] contrast-[1.06]"
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-void via-void/85 to-void/55" />
         <div className="absolute inset-0 bg-gradient-to-t from-void via-void/40 to-void/70" />
 
